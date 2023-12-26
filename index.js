@@ -17,7 +17,7 @@ const PORT = 3000;
 Model.knex(knex);
 
 app.use(cors());
-app.use(bodyparser.urlencoded({ extended: false }));
+app.use(bodyparser.urlencoded({ extended: true }));
 app.use(bodyparser.json());
 
 Object.keys(routes).map((route) => app.use('/api', routes[route]));
