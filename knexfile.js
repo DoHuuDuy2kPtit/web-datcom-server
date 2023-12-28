@@ -1,8 +1,6 @@
-const dotenv = require('dotenv');
+const dotenv = require("dotenv");
 
-dotenv.config({ path: '.env' });
-
-console.log(process.env.DB_CLIENT);
+dotenv.config({ path: ".env" });
 
 const database = {
   client: process.env.DB_CLIENT,
@@ -18,8 +16,8 @@ const database = {
     max: 10,
   },
   migrations: {
-    tableName: 'migrations',
-    directory: './database/migrations',
+    tableName: "migrations",
+    directory: "./database/migrations",
   },
 };
 

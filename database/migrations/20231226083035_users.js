@@ -17,7 +17,7 @@ exports.up = async function (knex) {
     table.enum("role", ["host", "user"]).defaultTo("user").notNullable();
     table.tinyint("isBlocked").defaultTo(1).notNullable();
     table.integer("otpAttempts").defaultTo(0).notNullable();
-    table.dateTime("createdDate");
+    table.timestamp('createdDate').defaultTo(knex.fn.now());
     table.dateTime("editDate");
   });
 };
