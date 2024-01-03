@@ -9,7 +9,7 @@ const signup = async (req, res) => {
   try {
     if (passwords !== confirmPassword) {
       res.status(403).json({
-        error: "Mật khẩu không trùng khớp",
+        message: "Mật khẩu không trùng khớp",
       });
     } else {
       await authService.signup(
@@ -20,7 +20,7 @@ const signup = async (req, res) => {
         confirmPassword
       );
       res.json({
-        message: "Sign up successfully",
+        message: `OTP đã được gủi về email: ${email}`,
       });
     }
   } catch (error) {
@@ -41,7 +41,7 @@ const signin = async (req, res) => {
     if (signinResult.status) {
       res.json({
         // messagee: signinResult.message,
-        messagee: "Đăng nhập thành công",
+        message: "Đăng nhập thành công",
         signinResult,
       });
     } else {
@@ -73,7 +73,7 @@ const otpAuthentication = async (req, res) => {
   } catch (error) {
     console.log("errorcontrollerotp:", error);
     res.status(400).json({
-      message: "lỗi",
+      message: "OTP không chính xác",
     });
   }
 };

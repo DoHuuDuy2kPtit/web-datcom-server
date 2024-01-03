@@ -4,11 +4,11 @@ const router = express.Router();
 
 const {
   verifytoken,
-  verifytokenHost,
+  // verifytokenHost,
 } = require("../http/middlewares/auth.midllewares");
 const userController = require("../http/controllers/users/users.controllers");
 
-router.get("/users", verifytoken, verifytokenHost, userController.getAllUsers);
+router.get("/users", verifytoken, userController.getAllUsers);
 
 router.get("/users/:id", verifytoken, userController.getOneUsers);
 

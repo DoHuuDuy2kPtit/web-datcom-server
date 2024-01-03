@@ -19,12 +19,17 @@ const signin = async (email, passwords) => {
     const checkUser = await usersService.checkUserEmail(email);
     // console.log("checkUser:", checkUser);
     if (!checkUser) {
-
       return {
         status: false,
         message: "Tài khoản không tồn tại hoặc sai mật khẩu",
       };
     } else {
+      if (checkUser.status === "Chưa xác thực") {
+        return {
+          status: false,
+          message: "Tài khoản của bạn chưa xác thực",
+        };
+      }
       const checkPassword = checkUser.passwords;
       const compare = bcrypt.compareSync(passwords, checkPassword);
       if (!compare) {
@@ -40,9 +45,8 @@ const signin = async (email, passwords) => {
         role: checkUser.role,
       };
       const accessToken = jwt.sign(user, process.env.SECRET_KEY, {
-        expiresIn: "120s",
+        expiresIn: "1h",
       });
-      
 
       return {
         status: true,
