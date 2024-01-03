@@ -1,7 +1,7 @@
 const Food = require('../../models/food');
 
-exports.getFood = async () => {
-  const allFood = await Food.query().select('*');
+exports.getFood = async ({ idMenu }) => {
+  const allFood = await Food.query().select('*').where('idMenu', idMenu);
   return { message: 'Đây là tất cả món ăn', data: allFood };
 };
 
@@ -31,5 +31,12 @@ exports.patchFood = async ({ idFood, foodName, price }) => {
   });
   return {
     message: 'Sửa thành công',
+  };
+};
+
+exports.getSearchFood = async ({ searchFood }) => {
+  await Food.query().where('foodName', searchFood);
+  return {
+    message: `Tìm kiếm món ăn`,
   };
 };

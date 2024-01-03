@@ -6,7 +6,7 @@ exports.up = function (knex) {
   return knex.schema.createTable('menu', function (table) {
     table.increments('idMenu');
     table.string('menuName').notNullable();
-    table.integer('idHost').notNullable().unique();
+    table.integer('idHost').notNullable();
     table.timestamp('created_at').defaultTo(knex.fn.now());
   });
 };
