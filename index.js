@@ -17,15 +17,15 @@ const PORT = 3000;
 Model.knex(knex);
 
 app.use(cors());
-app.use(bodyparser.urlencoded({ extended: false }));
 app.use(bodyparser.json());
+app.use(bodyparser.urlencoded({ extended: true }));
 
 Object.keys(routes).map((route) => app.use('/api', routes[route]));
 
 app.use((req, res) => {
   res.status(404).send('Api not found');
-})
+});
 
 server.listen(PORT, () => {
   console.log(`Server listening at http://locahost:${PORT}`);
-})
+});
