@@ -5,7 +5,7 @@ const {
   validateIpnputSignup,
   validateIpnputSignin,
 } = require("../http/middlewares/auth.midllewares");
-const authController = require("../http/controllers/auth/signup.controllers");
+const authController = require("../http/controllers/auth/auth.controllers");
 
 router.post("/auth/signup", validateIpnputSignup, authController.signup);
 

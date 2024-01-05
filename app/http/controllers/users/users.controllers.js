@@ -52,7 +52,12 @@ const resetPassword = async (req, res) => {
 const changePassword = async (req, res) => {
   const { email, passwords, newPassword } = req.body;
   try {
-    const pw = await userService.changePassword(email, passwords, newPassword);
+    const pw = await userService.changePassword(
+      email,
+      passwords,
+      newPassword,
+      // confirmNewPassword
+    );
 
     if (!pw) {
       res.status(200).json({
@@ -60,10 +65,38 @@ const changePassword = async (req, res) => {
       });
     } else {
       res.status(401).json({
-        message: "Mật khẩu cũ không chính xác",
+        errors: { passwords: "Mật khẩu cũ không chính xác" },
       });
     }
   } catch (error) {
+    res.status(500).json({
+      error: error,
+    });
+  }
+};
+
+const updateUserName = async (req, res) => {
+  const { id } = req.params;
+  const { userName } = req.body;
+  try {
+    const responseData = await userService.updateUserName(id, userName);
+    return res.status(200).json(responseData);
+  } catch (error) {
+    console.log("error:", error);
+    res.status(500).json({
+      error: error,
+    });
+  }
+};
+
+const updateAvatarUser = async (req, res) => {
+  const { id } = req.params;
+  const { avatarUser } = req.body;
+  try {
+    const responseData = await userService.updateAvatarUser(id, avatarUser);
+    return res.status(200).json(responseData);
+  } catch (error) {
+    console.log("error:", error);
     res.status(500).json({
       error: error,
     });
@@ -76,4 +109,6 @@ module.exports = {
   createUser,
   resetPassword,
   changePassword,
+  updateUserName,
+  updateAvatarUser,
 };

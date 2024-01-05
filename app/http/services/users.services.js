@@ -40,6 +40,20 @@ exports.checkUserEmail = async (email) => {
   }
 };
 
+// check id
+exports.checkIdUser = async (idUser) => {
+  try {
+    const user = await Users.query()
+      .select("*")
+      .where("idUser", idUser)
+      .first();
+    return user;
+  } catch (error) {
+    console.log("Error checking user email:", error);
+    throw error;
+  }
+};
+
 // check otp để xác nhận tài khoản
 exports.checkOtpAndEmail = async (email, otpCode) => {
   try {
@@ -88,42 +102,37 @@ exports.resetOtpCode = async (email) => {
 };
 
 // thêm user
-exports.createUser = async (userName, phoneNumber, email, passwords, res) => {
-  try {
-    const imageUser = "https://s.net.vn/TD1o";
-    const otp = randomOtpCode();
-    const mailOptions = {
-      from: process.env.EMAIL_ADMIN,
-      to: email,
-      subject: "OTP xác thực đăng kí",
-      text: `Mã xác thực OTP của bạn là: ${otp}`,
-    };
-    transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-        console.log(error);
-      } else {
-        return res.status(200).json({
-          message: `Mã OTP đã được gửi về email: ${email}`,
-        });
-        // console.log("Email sent: " + info.response);
-      }
-    });
-    await Users.query()
-      .insert([
-        {
-          userName,
-          phoneNumber,
-          email,
-          passwords,
-          avatarUser: imageUser,
-          otpCode: otp,
-        },
-      ])
-      .first();
-  } catch (error) {
-    console.log("errorService:", error);
-    return res.status(500).json({ error: "Internal Server Error" });
-  }
+exports.createUser = async (userName, phoneNumber, email, passwords) => {
+  const imageUser =
+    "https://firebasestorage.googleapis.com/v0/b/js230214-7830a.appspot.com/o/imagesUsers%2F764d59d32f61f0f91dec8c442ab052c5.jpgb9fea896-2ca6-474f-b5a3-84359e58572f?alt=media&token=ade95b9c-82aa-4567-9100-027a82a08ea8";
+  const otp = randomOtpCode();
+  const mailOptions = {
+    from: process.env.EMAIL_ADMIN,
+    to: email,
+    subject: "OTP xác thực đăng kí",
+    text: `Mã xác thực OTP của bạn là: ${otp}`,
+  };
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.log(error);
+    } else {
+      return {
+        message: `Mã OTP đã được gửi về email: ${email}`,
+      };
+    }
+  });
+  await Users.query()
+    .insert([
+      {
+        userName,
+        phoneNumber,
+        email,
+        passwords,
+        avatarUser: imageUser,
+        otpCode: otp,
+      },
+    ])
+    .first();
 };
 
 // quên mật khẩu
@@ -174,14 +183,40 @@ exports.changePassword = async (email, passwords, newPassword) => {
         await Users.query().update({ passwords: hash }).where("email", email);
       } else {
         return {
-          message: "Mật khẩu cũ không chính xác",
+          errors: { passwords: "Mật khẩu cũ không chính xác" },
         };
       }
     }
   } catch (error) {
     console.log("errorService:", error);
     return {
-      error: error,
+      errors: error,
     };
   }
+};
+
+exports.updateUserName = async (id, userName) => {
+  const checkIdUsers = await this.checkIdUser(id);
+  if (!checkIdUsers) {
+    return {
+      message: "Người dùng không tồn tại",
+    };
+  }
+  await Users.query().update({ userName: userName }).where("idUser", id);
+  return {
+    message: "Thành công",
+  };
+};
+
+exports.updateAvatarUser = async (id, avatarUser) => {
+  const checkIdUsers = await this.checkIdUser(id);
+  if (!checkIdUsers) {
+    return {
+      message: "Người dùng không tồn tại",
+    };
+  }
+  await Users.query().update({ avatarUser: avatarUser }).where("idUser", id);
+  return {
+    message: "Thành công",
+  };
 };

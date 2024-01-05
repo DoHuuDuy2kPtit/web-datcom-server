@@ -8,8 +8,8 @@ const signup = async (req, res) => {
   const { userName, phoneNumber, email, passwords, confirmPassword } = req.body;
   try {
     if (passwords !== confirmPassword) {
-      res.status(403).json({
-        message: "Mật khẩu không trùng khớp",
+      res.status(400).json({
+        errors: { passwords: "Mật khẩu không trùng khớp" },
       });
     } else {
       await authService.signup(
@@ -19,15 +19,28 @@ const signup = async (req, res) => {
         passwords,
         confirmPassword
       );
-      res.json({
+      res.status(200).json({
         message: `OTP đã được gủi về email: ${email}`,
       });
     }
   } catch (error) {
     console.log("erroreee:", error);
-    res.status(500).json({
-      error: error,
-    });
+    if (
+      error.nativeError.sqlMessage ==
+      `Duplicate entry '${email}' for key 'users.users_email_unique'`
+    ) {
+      res.status(403).json({
+        errors: { email: "Email đã được đăng kí" },
+      });
+    }
+    if (
+      error.nativeError.sqlMessage ==
+      `Duplicate entry '${phoneNumber}' for key 'users.users_phonenumber_unique'`
+    ) {
+      res.status(403).json({
+        errors: { phoneNumber: "Số điện thoại đã tồn tại" },
+      });
+    }
   }
 };
 
@@ -40,21 +53,21 @@ const signin = async (req, res) => {
 
     if (signinResult.status) {
       res.json({
-        // messagee: signinResult.message,
-        message: "Đăng nhập thành công",
+        message: `Chúc ${signinResult.user.userName} ngon miệng!`,
+        // message: "Đăng nhập thành công",
         signinResult,
       });
     } else {
       res.status(400).json({
         status: false,
-        message: signinResult.message,
+        errors: signinResult,
       });
     }
   } catch (error) {
     console.log("error:", error);
     res.status(500).json({
       status: false,
-      messages: error.message || "Có lỗi xảy ra",
+      errors: error || "Có lỗi xảy ra",
     });
   }
 };
@@ -73,7 +86,7 @@ const otpAuthentication = async (req, res) => {
   } catch (error) {
     console.log("errorcontrollerotp:", error);
     res.status(400).json({
-      message: "OTP không chính xác",
+      errors: { message: "OTP không chính xác" },
     });
   }
 };

@@ -4,7 +4,7 @@ const usersService = require("./users.services");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-const signup = (userName, phoneNumber, email, passwords) => {
+const signup = async (userName, phoneNumber, email, passwords) => {
   try {
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(passwords, salt);
@@ -21,13 +21,13 @@ const signin = async (email, passwords) => {
     if (!checkUser) {
       return {
         status: false,
-        message: "Tài khoản không tồn tại hoặc sai mật khẩu",
+        email: "Tài khoản không tồn tại !",
       };
     } else {
       if (checkUser.status === "Chưa xác thực") {
         return {
           status: false,
-          message: "Tài khoản của bạn chưa xác thực",
+          email: "Tài khoản của bạn chưa xác thực !",
         };
       }
       const checkPassword = checkUser.passwords;
@@ -35,7 +35,7 @@ const signin = async (email, passwords) => {
       if (!compare) {
         return {
           status: false,
-          message: "Mật khẩu đăng nhập không chính xác",
+          passwords: "Mật khẩu đăng nhập không chính xác !",
         };
       }
       const user = {
@@ -55,6 +55,7 @@ const signin = async (email, passwords) => {
       };
     }
   } catch (error) {
+    console.log("error auth:", error);
     return error;
   }
 };
