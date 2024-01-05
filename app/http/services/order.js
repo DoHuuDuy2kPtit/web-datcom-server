@@ -20,3 +20,21 @@ exports.postOrder = async ({
     message: 'Thêm order thành công',
   };
 };
+
+exports.getOrder = async () => {
+  const listOrder = await Order.query().select('*');
+  return {
+    message: 'get order',
+    data: listOrder,
+  };
+};
+
+exports.patchOrder = async (idUser) => {
+  const paymentOrder = await Order.query()
+    .where('idUser', idUser)
+    .where('status', 0)
+    .patch({ status: 1 });
+  return {
+    message: 'Sửa thành công',
+  };
+};
