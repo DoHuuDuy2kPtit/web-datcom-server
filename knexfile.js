@@ -1,26 +1,26 @@
-const dotenv = require('dotenv');
+  const dotenv = require('dotenv');
 
-dotenv.config({ path: '.env' });
+  dotenv.config({ path: '.env' });
 
-console.log(process.env.DB_CLIENT);
+  console.log(process.env.DB_CLIENT);
 
-const database = {
-  client: process.env.DB_CLIENT,
-  connection: {
-    host: process.env.DB_HOST,
-    port: process.env.DB_PORT,
-    database: process.env.DB_DATABASE,
-    user: process.env.DB_USERNAME,
-    password: process.env.DB_PASSWORD,
-  },
-  pool: {
-    min: 2,
-    max: 10,
-  },
-  migrations: {
-    tableName: 'migrations',
-    directory: './database/migrations',
-  },
-};
+  const database = {
+    client: process.env.DB_CLIENT,
+    connection: {
+      host: process.env.DB_HOST,
+      port: process.env.DB_PORT,
+      database: process.env.DB_DATABASE,
+      user: process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD,
+    },
+    pool: {
+      min: 2,
+      max: 10,
+    },
+    migrations: {
+      tableName: 'migrations',
+      directory: './database/migrations',
+    },
+  };
 
 module.exports = database;
