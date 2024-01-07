@@ -4,25 +4,6 @@ const validateIpnputSignup = (req, res, next) => {
   const { userName, phoneNumber, email, passwords, confirmPassword } = req.body;
   const errors = {};
 
-  if (!userName) {
-    errors.userName = "Vui lòng nhập tên người dùng";
-  }
-
-  if (!phoneNumber) {
-    errors.phoneNumber = "Vui lòng nhập số điện thoại";
-  }
-
-  if (!email) {
-    errors.email = "Vui lòng nhập địa chỉ email";
-  }
-
-  if (!passwords) {
-    errors.passwords = "Vui lòng nhập mật khẩu";
-  }
-
-  if (!confirmPassword) {
-    errors.confirmPassword = "Vui lòng nhập mật khẩu";
-  }
   if (confirmPassword !== passwords) {
     errors.confirmPassword = "Mật khẩu xác nhận không khớp";
   }
@@ -44,8 +25,7 @@ const validateIpnputSignup = (req, res, next) => {
   }
 
   if (passwords.length < 6) {
-    errors.passwords =
-      "Mật khẩu phải có ít nhất 6 kí tự, bao gồm ít nhất một chữ cái viết hoa và một chữ số.";
+    errors.passwords = "Mật khẩu phải có ít nhất 6 kí tự.";
   }
 
   if (!/[A-Z]/.test(passwords)) {
@@ -54,6 +34,25 @@ const validateIpnputSignup = (req, res, next) => {
 
   if (!/\d/.test(passwords)) {
     errors.passwords = "Mật khẩu phải chứa ít nhất 1 chữ số.";
+  }
+  if (!userName) {
+    errors.userName = "Vui lòng nhập tên người dùng";
+  }
+
+  if (!phoneNumber) {
+    errors.phoneNumber = "Vui lòng nhập số điện thoại";
+  }
+
+  if (!email) {
+    errors.email = "Vui lòng nhập địa chỉ email";
+  }
+
+  if (!passwords) {
+    errors.passwords = "Vui lòng nhập mật khẩu";
+  }
+
+  if (!confirmPassword) {
+    errors.confirmPassword = "Vui lòng nhập mật khẩu";
   }
 
   // Nếu có lỗi, trả về thông báo lỗi
@@ -85,8 +84,7 @@ const validateIpnputSignin = (req, res, next) => {
 
   if (passwords) {
     if (passwords.length < 6) {
-      errors.passwords =
-        "Mật khẩu phải có ít nhất 6 kí tự, bao gồm ít nhất một chữ cái viết hoa và một chữ số.";
+      errors.passwords = "Mật khẩu phải có ít nhất 6 kí tự.";
     } else {
       if (!/[A-Z]/.test(passwords)) {
         errors.passwords = "Mật khẩu phải chứa ít nhất 1 chữ cái viết hoa.";

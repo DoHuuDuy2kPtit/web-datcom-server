@@ -5,15 +5,14 @@
 exports.up = function (knex) {
   return knex.schema.createTable("userhost", (table) => {
     table.increments("idUserHost").primary();
-    // table.integer("idUser");
-    // table.integer("idHost");
     table.decimal("money", 10, 2);
     table.decimal("debt", 10, 2).defaultTo(0).notNullable();
-    table.dateTime("createdAt");
-    table.dateTime("updatedAt");
-    table.integer("idHost").unsigned().references("hosts.idHost").notNullable();
-    table.integer("idUser").unsigned().references("users.idUser").notNullable();
-    
+    table.timestamp("createdAt").defaultTo(knex.fn.now());
+    table.timestamp("updatedAt").defaultTo(knex.fn.now());
+    table.uuid("idUser").notNullable(); 
+    table.integer("idHost").unsigned().notNullable();
+    table.foreign("idUser").references("users.idUser").onDelete("CASCADE");  
+    table.foreign("idHost").references("hosts.idHost").onDelete("CASCADE");  
   });
 };
 

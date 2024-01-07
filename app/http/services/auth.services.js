@@ -4,6 +4,7 @@ const usersService = require("./users.services");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
+// đăng kí
 const signup = async (userName, phoneNumber, email, passwords) => {
   try {
     const salt = bcrypt.genSaltSync(10);
@@ -14,6 +15,7 @@ const signup = async (userName, phoneNumber, email, passwords) => {
   }
 };
 
+// đăng nhập
 const signin = async (email, passwords) => {
   try {
     const checkUser = await usersService.checkUserEmail(email);

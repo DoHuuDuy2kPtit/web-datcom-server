@@ -11,6 +11,8 @@ router.post("/auth/signup", validateIpnputSignup, authController.signup);
 
 router.post("/auth/signin", validateIpnputSignin, authController.signin);
 
+router.post("/auth/signinGoogle", authController.signinGoogle)
+
 router.post("/auth/otpAuthentication", authController.otpAuthentication);
 
 router.post("/auth/resetOtpCode", authController.resetOtpCode);

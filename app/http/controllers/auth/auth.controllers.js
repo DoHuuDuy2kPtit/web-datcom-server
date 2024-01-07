@@ -52,7 +52,7 @@ const signin = async (req, res) => {
     // console.log("signinResult:", signinResult)
 
     if (signinResult.status) {
-      res.json({
+      res.status(200).json({
         message: `Chúc ${signinResult.user.userName} ngon miệng!`,
         // message: "Đăng nhập thành công",
         signinResult,
@@ -68,6 +68,28 @@ const signin = async (req, res) => {
     res.status(500).json({
       status: false,
       errors: error || "Có lỗi xảy ra",
+    });
+  }
+};
+
+const signinGoogle = async (req, res) => {
+  const { idUser, userName, phoneNumber, email, avatarUser } = req.body;
+  try {
+    const signinResult = await userService.signinGoogle(
+      idUser,
+      userName,
+      phoneNumber,
+      email,
+      avatarUser
+    );
+
+    res.status(200).json({
+      signinResult,
+    });
+  } catch (error) {
+    console.log("error:", error);
+    res.status(200).json({
+      errors: error,
     });
   }
 };
@@ -111,4 +133,10 @@ const resetOtpCode = async (req, res) => {
   }
 };
 
-module.exports = { signup, signin, otpAuthentication, resetOtpCode };
+module.exports = {
+  signup,
+  signin,
+  otpAuthentication,
+  resetOtpCode,
+  signinGoogle,
+};

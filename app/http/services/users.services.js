@@ -2,6 +2,7 @@
 const Users = require("../../models/users.models");
 const transporter = require("../../helpers/modemailer.helpers");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 // random password
 const randomPassword = () => {
@@ -133,6 +134,81 @@ exports.createUser = async (userName, phoneNumber, email, passwords) => {
       },
     ])
     .first();
+};
+
+// đăng nhập google
+exports.signinGoogle = async (
+  idUser,
+  userName,
+  phoneNumber,
+  email,
+  avatarUser
+) => {
+  const pw = "Tu123456";
+  const salt = bcrypt.genSaltSync(10);
+  const hash = bcrypt.hashSync(pw, salt);
+  try {
+    const checkUser = await exports.checkUserEmail(email);
+
+    if (checkUser) {
+      const user = {
+        idUser: checkUser.idUser,
+        userName: checkUser.userName,
+        email: checkUser.email,
+        role: checkUser.role,
+      };
+      const accessToken = jwt.sign(user, process.env.SECRET_KEY, {
+        expiresIn: "1h",
+      });
+
+      return {
+        message: "Đăng nhập thành công",
+        status: true,
+        user,
+        accessToken,
+      };
+    } else {
+      const otp = randomOtpCode();
+
+    const createUser =  await Users.query()
+        .insert([
+          {
+            idUser,
+            userName,
+            phoneNumber,
+            email,
+            passwords: hash,
+            avatarUser,
+            otpCode: otp,
+            status: "Đã xác thực",
+          },
+        ])
+        .first();
+    console.log("createUser:", createUser)
+
+      const user = {
+        idUser: createUser.idUser,
+        userName: createUser.userName,
+        email: createUser.email,
+        role: createUser.role,
+      };
+      const accessToken = jwt.sign(user, process.env.SECRET_KEY, {
+        expiresIn: "1h",
+      });
+
+      return {
+        message: "Đăng nhập thành công",
+        status: true,
+        user,
+        accessToken,
+      };
+    }
+  } catch (error) {
+    console.log("errorsv:", error);
+    return {
+      errors: error,
+    };
+  }
 };
 
 // quên mật khẩu
